@@ -24,23 +24,49 @@ install () {
 	makepkg -sic
 }
 
+list () {
+	for dir in ~/AUR/*/
+	do
+		dir=${dir%*/}      # remove the trailing "/"
+		pacman -Q "${dir##*/}"    # print everything after the final ""
+	done
+}
+
+remove () {
+	dir=$1
+	if [ -d ~/AUR/$dir/ ]
+	then
+		sudo pacman -Rs $dir
+		echo "cleaning up files"
+		rm -fr ~/AUR/$dir
+
+	else
+		echo "package ${dir} is not known"
+	fi	
+}
+
 help () {
 	echo "
 Script for managing all the AURs. 
 Requires a folder ~/AUR/ to exist.
 All AURs will be installed with as a git repo clone into this folder. updating will update all AURs in that folder
 usage: aurman [option] 
-      	-u: 		update existing packages
+      	-l:		list all installed packages
+	-u: 		update all installed packages
    	-i <arg>: 	install AUR package from <args> git repo link
-       	-h: 		show this helptext"
+       	-r <arg>: 	remove an installed package
+	-h: 		show this helptext"
 }
 
+set -e
 # unsetting name in case it was set
 noargs="true"
-while getopts "hui:" opt; do
+while getopts "r:huli:" opt; do
 	case "$opt" in
 		"i" ) install $OPTARG;;
 		"u" ) update;;
+		"l" ) list;;
+		"r" ) remove $OPTARG;;
 		"h" | * ) help;;
 	esac
 	noargs="false"
