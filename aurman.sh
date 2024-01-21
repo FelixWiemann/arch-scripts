@@ -1,4 +1,4 @@
-
+#/usr/bin/bash
 update () {
 	echo "updating"
 	for dir in ~/AUR/*/
