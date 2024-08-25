@@ -3,7 +3,8 @@ update () {
 	echo "updating"
 	for dir in ~/AUR/*/
 	do
-		cd ~/AUR/dropbox
+		cd $dir
+		echo "updating $dir"
 		git clean -dfx
 		git fetch origin
 		curr=$(git rev-parse HEAD)
